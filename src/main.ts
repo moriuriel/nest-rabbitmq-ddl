@@ -1,4 +1,4 @@
-import { Logger, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
@@ -9,6 +9,8 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const consumer = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,

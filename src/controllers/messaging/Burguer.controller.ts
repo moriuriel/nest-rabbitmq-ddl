@@ -18,7 +18,7 @@ export class BurgerController {
   create(@Payload() data: any, @Ctx() context: RmqContext) {
     const retryCount = (data.retryCount ?? 0) + 1;
 
-    console.log('data', data, retryCount, retryCount >= this.maxRetries);
+    console.log('data', data);
 
     if (retryCount >= this.maxRetries) {
       Logger.warn(
