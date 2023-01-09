@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Injectable, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { CreateBurgerInput } from 'src/applications/contracts/input/CreateBurger.input';
+import { CreateBurgerInput } from 'src/application/contracts/input/CreateBurger.input';
 
 @Controller({ version: '1' })
 @Injectable()

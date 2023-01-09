@@ -3,35 +3,17 @@ import {
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
+import { QueueType } from '../config';
 
 export class RabbitMQAdapter {
-  static buildRabbitMQConnection(): ClientProxy {
+  static buildRabbitMQConnection(options: QueueType): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
         urls: ['amqp://guest:guest@localhost:5672'],
-        queue: 'burguer',
+        queue: options.queueName,
         noAck: false,
-        queueOptions: {
-          deadLetterExchange: '',
-          deadLetterRoutingKey: `burguer.failed`,
-        },
-      },
-    });
-  }
-
-  static buildRabbitMQConnectionDelay(): ClientProxy {
-    return ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://guest:guest@localhost:5672'],
-        queue: 'burguer.delay',
-        noAck: false,
-        queueOptions: {
-          deadLetterExchange: '',
-          deadLetterRoutingKey: `burguer`,
-          messageTtl: 4000,
-        },
+        queueOptions: options.queueOptions,
       },
     });
   }

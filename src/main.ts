@@ -2,6 +2,7 @@ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
+import { BurgerQueue } from './infrastructure/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,12 +19,9 @@ async function bootstrap() {
       transport: Transport.RMQ,
       options: {
         urls: ['amqp://guest:guest@localhost:5672'],
-        queue: 'burguer',
+        queue: BurgerQueue.queueName,
         noAck: false,
-        queueOptions: {
-          deadLetterExchange: '',
-          deadLetterRoutingKey: `burguer.failed`,
-        },
+        queueOptions: BurgerQueue.queueOptions,
       },
     },
   );

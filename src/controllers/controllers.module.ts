@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BurgerQueue, BurgerQueueDelay } from 'src/infrastructure/config';
 import { RabbitMQAdapter } from 'src/infrastructure/queue/RabbitMQAdapter';
 import { BurgerController } from './http';
 import { BurgerController as MessagingBurgerController } from './messaging';
@@ -8,13 +9,13 @@ import { BurgerController as MessagingBurgerController } from './messaging';
     {
       provide: 'messaging-client',
       useFactory: () => {
-        return RabbitMQAdapter.buildRabbitMQConnection();
+        return RabbitMQAdapter.buildRabbitMQConnection(BurgerQueue);
       },
     },
     {
       provide: 'messaging-client-delay',
       useFactory: () => {
-        return RabbitMQAdapter.buildRabbitMQConnectionDelay();
+        return RabbitMQAdapter.buildRabbitMQConnection(BurgerQueueDelay);
       },
     },
   ],
