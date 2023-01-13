@@ -26,7 +26,6 @@ export class RabbitMQAdapter {
 
   public publish<MessageType>(pattern: string, message: MessageType) {
     this.logger.setProcessName('QUEUE_ADAPTER');
-    this.logger.setHeader('APP-NAME', 'localhost');
 
     this.logger.setMessage(JSON.stringify(message));
 

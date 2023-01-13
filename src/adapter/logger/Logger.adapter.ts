@@ -1,46 +1,38 @@
 import { instanceToPlain } from 'class-transformer';
 import { Log, LogHeader, StructuredData } from './Log';
 
-interface ILoggerContent {
-  MSG: string;
-  HEADER: {
-    APPNAME: string;
-    HOSTNAME: string;
-    TIMESTAMP: string;
-  };
-  VERSION: string;
-  PROCESSNAME: string;
-  PROCESSLOG: Array<string>;
-  TOTALPROCESSINGTIME: number;
+interface IHeader {
+  appName: string;
+  hostName: string;
+  timestamp: string;
 }
 
 export class LoggerAdapter {
-  private content: ILoggerContent = {} as ILoggerContent;
   private processLog: Array<string> = [];
+  private version: string;
+  private message: string;
+  private processName: string;
+  private totalProcessingTime: number;
+  private header: IHeader;
 
-  private clearInfo() {
-    this.content = {} as ILoggerContent;
-    this.processLog = [];
-  }
-
-  setMessage(message: string) {
-    this.content.MSG = message;
-  }
-
-  setHeader(app: string, host: string) {
-    this.content.HEADER = {
-      APPNAME: app,
-      HOSTNAME: host,
-      TIMESTAMP: new Date(Date.now()).toISOString(),
+  constructor() {
+    this.header = {
+      appName: 'BURGER-WORKER',
+      hostName: 'localhost',
+      timestamp: new Date(Date.now()).toISOString(),
     };
   }
 
+  setMessage(message: string) {
+    this.message = message;
+  }
+
   setVersion(version: string) {
-    this.content.VERSION = version;
+    this.version = version;
   }
 
   setProcessName(process: string) {
-    this.content.PROCESSNAME = process;
+    this.processName = process;
   }
 
   setProcessLog(processLog: string) {
@@ -48,20 +40,20 @@ export class LoggerAdapter {
   }
 
   setProcessTime(time: number) {
-    this.content.TOTALPROCESSINGTIME = time;
+    this.totalProcessingTime = time;
   }
 
   sendLog() {
     const log = new Log(
-      this.content.MSG,
-      this.content.VERSION,
-      this.content.PROCESSNAME,
+      this.message,
+      this.version,
+      this.processName,
       this.processLog,
-      this.content.TOTALPROCESSINGTIME,
+      this.totalProcessingTime,
       new LogHeader(
-        this.content.HEADER.APPNAME,
-        this.content.HEADER.HOSTNAME,
-        this.content.HEADER.TIMESTAMP,
+        this.header.appName,
+        this.header.hostName,
+        this.header.timestamp,
       ),
       new StructuredData('stating'),
     );
@@ -73,7 +65,5 @@ export class LoggerAdapter {
     Object.assign(content, { content: logPlain });
 
     console.log(JSON.stringify(content));
-
-    this.clearInfo();
   }
 }

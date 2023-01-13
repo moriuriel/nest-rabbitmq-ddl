@@ -18,7 +18,6 @@ export class BurgerController {
   @Post('/burgers')
   create(@Body() data: CreateBurgerInput) {
     this.logger.setProcessName('SEND_MAKE_BURGER');
-    this.logger.setHeader('APP-NAME', 'localhost');
     this.logger.setMessage(JSON.stringify(data));
 
     const hrstart = process.hrtime();

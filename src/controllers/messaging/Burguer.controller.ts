@@ -21,7 +21,6 @@ export class BurgerController {
   @MessagePattern('MAKE_BURGER')
   create(@Payload() data: any, @Ctx() context: RmqContext) {
     this.logger.setProcessName('CONSUMER_MAKE_BURGER');
-    this.logger.setHeader('APP-NAME', 'localhost');
     this.logger.setMessage(JSON.stringify(data));
 
     const hrstart = process.hrtime();
