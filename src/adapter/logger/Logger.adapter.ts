@@ -1,3 +1,6 @@
+import { instanceToPlain } from 'class-transformer';
+import { Log, LogHeader, StructuredData } from './Log';
+
 interface ILoggerContent {
   MSG: string;
   HEADER: {
@@ -14,10 +17,6 @@ interface ILoggerContent {
 export class LoggerAdapter {
   private content: ILoggerContent = {} as ILoggerContent;
   private processLog: Array<string> = [];
-
-  constructor() {
-    this.clearInfo();
-  }
 
   private clearInfo() {
     this.content = {} as ILoggerContent;
@@ -53,13 +52,28 @@ export class LoggerAdapter {
   }
 
   sendLog() {
+    const log = new Log(
+      this.content.MSG,
+      this.content.VERSION,
+      this.content.PROCESSNAME,
+      this.processLog,
+      this.content.TOTALPROCESSINGTIME,
+      new LogHeader(
+        this.content.HEADER.APPNAME,
+        this.content.HEADER.HOSTNAME,
+        this.content.HEADER.TIMESTAMP,
+      ),
+      new StructuredData('stating'),
+    );
+
+    const logPlain = instanceToPlain(log);
+
     const content = {};
 
-    Object.assign(content, { ...this.content, PROCESSLOG: this.processLog });
+    Object.assign(content, { content: logPlain });
 
-    const logObject = { content };
+    console.log(JSON.stringify(content));
 
-    console.log(JSON.stringify(logObject));
     this.clearInfo();
   }
 }
