@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { BurgerQueue, BurgerQueueDelay } from 'src/infrastructure/config';
+import { Module, Scope } from '@nestjs/common';
+import { LoggerAdapter } from 'src/adapter/logger/Logger.adapter';
 import { RabbitMQAdapter } from 'src/infrastructure/queue/RabbitMQAdapter';
 import { BurgerController } from './http';
 import { BurgerController as MessagingBurgerController } from './messaging';
@@ -8,15 +8,16 @@ import { BurgerController as MessagingBurgerController } from './messaging';
   providers: [
     {
       provide: 'messaging-client',
-      useFactory: () => {
-        return RabbitMQAdapter.buildRabbitMQConnection(BurgerQueue);
-      },
+      useClass: RabbitMQAdapter,
     },
     {
       provide: 'messaging-client-delay',
-      useFactory: () => {
-        return RabbitMQAdapter.buildRabbitMQConnection(BurgerQueueDelay);
-      },
+      useClass: RabbitMQAdapter,
+    },
+    {
+      scope: Scope.TRANSIENT,
+      provide: 'logger',
+      useClass: LoggerAdapter,
     },
   ],
 })
