@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AppCluster } from './app.cluster';
 import { AppModule } from './app.module';
 import { BurgerQueue } from './infrastructure/config';
 
@@ -32,4 +33,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
-bootstrap();
+
+AppCluster.register(bootstrap);
